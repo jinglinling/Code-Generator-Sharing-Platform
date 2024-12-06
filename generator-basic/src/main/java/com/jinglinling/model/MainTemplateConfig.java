@@ -13,7 +13,7 @@ public class MainTemplateConfig {
     private boolean loop;
 
     //作者注释
-    private String author = "谢骏晖";
+    private String author = "xiejunhui";
 
     //输出信息
     private String outputText = "sum = ";

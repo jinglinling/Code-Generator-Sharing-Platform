@@ -47,9 +47,8 @@ public class DynamicGenerator {
         Template template = configuration.getTemplate(templateName);
 
         //生成
-        Writer out = new FileWriter(outputPath);
-        template.process(model,out);
-
-        out.close();
+        try (Writer out = new OutputStreamWriter(new FileOutputStream(outputPath), "UTF-8")) {
+            template.process(model, out);
+        }
     }
 }
