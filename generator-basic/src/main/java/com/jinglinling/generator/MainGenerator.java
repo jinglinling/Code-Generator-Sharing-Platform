@@ -13,20 +13,23 @@ import java.io.IOException;
  */
 public class MainGenerator {
     public static void doGenerator(Object model) throws IOException, TemplateException {
-        String projectPath = System.getProperty("user.dir");
-        //整个项目的根路径
-        File parentFile = new File(projectPath).getParentFile();
-        //输入路径
-        String inputPath = new File(parentFile,"generator-demo-projects/acm-template").getAbsolutePath();
-        String outputPath = projectPath;
+        String inputRootPath = "D:\\ProgramCode\\Java\\eclipse-wokrspace\\Code-Generator-Sharing-Platform\\generator-demo-projects\\acm-template-pro";
+        String outputRootPath = "D:\\ProgramCode\\Java\\eclipse-wokrspace\\Code-Generator-Sharing-Platform\\acm-template-pro";
 
-        //生成静态文件
-        StaticGenerator.copyFilesByRecursive(inputPath,outputPath);
+        String inputPath;
+        String outputPath;
 
-        //生成动态文件
-        String inputDynamicFilePath = projectPath + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
-        String outputDynamicFilePath = outputPath + File.separator + "acm-template/src/com/jinglinling/acm/MainTemplate.java";
-        DynamicGenerator.doGenerator(inputDynamicFilePath,outputDynamicFilePath,model);
+        inputPath = new File(inputRootPath,"src/com/jinglinling/acm/MainTemplate.java.ftl").getAbsolutePath();
+        outputPath = new File(outputRootPath,"src/com/jinglinling/acm/MainTemplate.java").getAbsolutePath();
+        DynamicGenerator.doGenerator(inputPath,outputPath,model);
+
+        inputPath = new File(inputRootPath,".gitignore").getAbsolutePath();
+        outputPath = new File(outputRootPath,".gitignore").getAbsolutePath();
+        StaticGenerator.copyFileByHutool(inputPath,outputPath);
+
+        inputPath = new File(inputRootPath,"README.md").getAbsolutePath();
+        outputPath = new File(outputRootPath,"README.md").getAbsolutePath();
+        StaticGenerator.copyFileByHutool(inputPath,outputPath);
     }
 
     public static void main(String[] args) throws IOException,TemplateException {

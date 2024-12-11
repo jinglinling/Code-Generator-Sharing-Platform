@@ -15,11 +15,11 @@ import java.nio.file.StandardCopyOption;
  * @Description 使用Hutool生成(复制)静态文件
  */
 public class StaticGenerator {
-    /*public static void copyFileByHutool(String inputPath,String outputPath) {
+    public static void copyFileByHutool(String inputPath,String outputPath) {
         FileUtil.copy(inputPath,outputPath,false);
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         //获取整个项目的根目录
         String projectPath = System.getProperty("user.dir");
         System.out.println(projectPath);
