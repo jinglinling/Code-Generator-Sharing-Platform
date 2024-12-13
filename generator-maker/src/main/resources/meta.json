@@ -6,8 +6,9 @@
   "author": "jinglinling",
   "createTime": "2024-12-10",
   "fileConfig": {
-    "inputRootPath": "D:/ProgramCode/Java/eclipse-wokrspace/Code-Generator-Sharing-Platform/generator-demo-projects/acm-template-pro",
+    "inputRootPath": ".source/acm-template-pro",
     "outputRootPath": "generated",
+    "sourceRootPath": "D:/ProgramCode/Java/eclipse-wokrspace/Code-Generator-Sharing-Platform/generator-demo-projects/acm-template-pro",
     "type": "dir",
     "files": [
       {

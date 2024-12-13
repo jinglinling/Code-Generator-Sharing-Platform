@@ -1,6 +1,9 @@
 package com.jinglinling;
 
-//import com.jinglinling.maker.cli.CommandExecutor;
+import com.jinglinling.maker.generator.main.MainGenerator;
+import freemarker.template.TemplateException;
+
+import java.io.IOException;
 
 /**
  * @Auther 谢骏晖
@@ -8,8 +11,7 @@ package com.jinglinling;
  * @Description
  */
 public class Main {
-    public static void main(String[] args) {
-        /*CommandExecutor commandExecutor = new CommandExecutor();
-        commandExecutor.doExecute(args);*/
+    public static void main(String[] args) throws TemplateException, IOException, InterruptedException {
+        new MainGenerator().doGenerate();
     }
 }
