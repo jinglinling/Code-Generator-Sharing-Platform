@@ -1,6 +1,5 @@
 package com.jinglinling.maker.generator.file;
 
-import com.jinglinling.maker.model.DataModel;
 import freemarker.template.TemplateException;
 
 import java.io.File;
@@ -27,13 +26,5 @@ public class FileGenerator {
         String inputDynamicFilePath = projectPath + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
         String outputDynamicFilePath = outputPath + File.separator + "acm-template/src/com/jinglinling/acm/MainTemplate.java";
         DynamicFileGenerator.doGenerator(inputDynamicFilePath,outputDynamicFilePath,model);
-    }
-
-    public static void main(String[] args) throws IOException,TemplateException {
-        DataModel dataModel = new DataModel();
-        dataModel.setAuthor("jinglinling");
-        dataModel.setLoop(false);
-        dataModel.setOutputText("求和结果： ");
-        doGenerator(dataModel);
     }
 }
