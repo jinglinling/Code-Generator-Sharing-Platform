@@ -20,15 +20,21 @@ public class TemplateMakerFileConfig {
     @NoArgsConstructor
     @Data
     public static class FileInfoConfig {
+
         private String path;
-        private List<FileFilterConfig> FilterConfigList;
+
+        private String condition;
+
+        private List<FileFilterConfig> filterConfigList;
     }
 
-    @NoArgsConstructor
     @Data
     public static class FileGroupConfig {
+
         private String condition;
+
         private String groupKey;
+
         private String groupName;
     }
 }

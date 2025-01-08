@@ -11,8 +11,8 @@ import lombok.Getter;
 
 @Getter
 public enum FileFilterRangeEnum {
-    FILE_NAME("文件名称","fileName"),
-    FILE_CONTENT("文件内容","fileContent");
+    FILE_NAME("文件名称", "fileName"),
+    FILE_CONTENT("文件内容", "fileContent");
 
     private final String test;
     private final String value;
@@ -38,7 +38,6 @@ public enum FileFilterRangeEnum {
                 return anEnum;
             }
         }
-
         return null;
     }
 }

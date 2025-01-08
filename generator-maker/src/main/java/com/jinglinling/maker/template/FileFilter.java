@@ -29,7 +29,7 @@ public class FileFilter {
         String fileName = file.getName();
         String fileContent = FileUtil.readUtf8String(file);
 
-        //所有过滤器的校验结束的结果
+        // 所有过滤器校验结束的结果
         boolean result = true;
 
         if (CollUtil.isEmpty(fileFilterConfigList)) {
@@ -46,7 +46,7 @@ public class FileFilter {
                 continue;
             }
 
-            //要过滤的内容
+            // 要过滤的原内容
             String content = fileName;
             switch (fileFilterRangeEnum) {
                 case FILE_NAME:
@@ -58,11 +58,11 @@ public class FileFilter {
                 default:
             }
 
-            FileFilterRuleEnum fileFilterRuleEnum = FileFilterRuleEnum.getEnumByValue(rule);
-            if (fileFilterRuleEnum == null) {
+            FileFilterRuleEnum filterRuleEnum = FileFilterRuleEnum.getEnumByValue(rule);
+            if (filterRuleEnum == null) {
                 continue;
             }
-            switch (fileFilterRuleEnum) {
+            switch (filterRuleEnum) {
                 case CONTAINS:
                     result = content.contains(value);
                     break;
@@ -81,12 +81,13 @@ public class FileFilter {
                 default:
             }
 
-            //有一个不满足，直接返回false
+            // 有一个不满足，就直接返回
             if (!result) {
                 return false;
             }
         }
-        //都满足
+
+        // 都满足
         return true;
     }
 
@@ -98,11 +99,11 @@ public class FileFilter {
      * @date: 2024/12/27
      * @Description: 对某个文件或目录进行过滤，返回文件列表(对多文件过滤)
      */
-    public static List<File> doFilter(String filePath,List<FileFilterConfig> fileFilterConfigList) {
-        //根据路径获取所有文件
+    public static List<File> doFilter(String filePath, List<FileFilterConfig> fileFilterConfigList) {
+        // 根据路径获取所有文件
         List<File> fileList = FileUtil.loopFiles(filePath);
         return fileList.stream()
-                .filter(file -> doSingleFileFilter(fileFilterConfigList,file))
+                .filter(file -> doSingleFileFilter(fileFilterConfigList, file))
                 .collect(Collectors.toList());
     }
 }
