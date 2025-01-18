@@ -1,3 +1,9 @@
+# My Custon
+application-local.yml
+.idea
+.temp
+target
+
 ### Java template
 # Compiled class file
 *.class

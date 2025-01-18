@@ -3,6 +3,7 @@ package com.jinglinling.maker.generator.main;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import com.jinglinling.maker.generator.JarGenerator;
 import com.jinglinling.maker.generator.ScriptGenerator;
 import com.jinglinling.maker.generator.file.DynamicFileGenerator;
@@ -134,7 +135,7 @@ public abstract class GenerateTemplate {
     }
 
     //生成精简版的程序 (产物包)
-    protected void buildDist(String outputPath, String sourceCopyDestPath, String readMeOutPutPath, String shellOutputFilePath, String jarPath) {
+    protected String buildDist(String outputPath, String sourceCopyDestPath, String readMeOutPutPath, String shellOutputFilePath, String jarPath) {
         String distOutputPath = outputPath + "-dist";
         //拷贝jar包
         String targetAbsolutePath = distOutputPath + File.separator + "target";
@@ -148,6 +149,7 @@ public abstract class GenerateTemplate {
         FileUtil.copy(sourceCopyDestPath,distOutputPath,true);
         //拷贝README.md文件
         FileUtil.copy(readMeOutPutPath,distOutputPath,true);
+        return distOutputPath;
     }
 
     // 封装脚本
@@ -155,5 +157,16 @@ public abstract class GenerateTemplate {
         String shellOutputFilePath = outputPath + File.separator + "generator";
         ScriptGenerator.doGenerate(shellOutputFilePath, jarPath);
         return shellOutputFilePath;
+    }
+
+    /**
+     * 制作压缩包
+     * @param outputPath
+     * @return 压缩包路径
+     */
+    protected String buildZip(String outputPath) {
+        String zipPath = outputPath + ".zip";
+        ZipUtil.zip(outputPath,zipPath);
+        return zipPath;
     }
 }

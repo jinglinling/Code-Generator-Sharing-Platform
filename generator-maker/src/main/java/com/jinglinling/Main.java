@@ -1,6 +1,8 @@
 package com.jinglinling;
 
+import com.jinglinling.maker.generator.main.GenerateTemplate;
 import com.jinglinling.maker.generator.main.MainGenerator;
+import com.jinglinling.maker.generator.main.ZipGenerator;
 import freemarker.template.TemplateException;
 
 import java.io.IOException;
@@ -12,6 +14,8 @@ import java.io.IOException;
  */
 public class Main {
     public static void main(String[] args) throws TemplateException, IOException, InterruptedException {
-        new MainGenerator().doGenerate();
+        //new MainGenerator().doGenerate();
+        GenerateTemplate generateTemplate = new ZipGenerator();
+        generateTemplate.doGenerate();
     }
 }
