@@ -26,6 +26,7 @@ public class DynamicFileGenerator {
     public static void doGenerator(String inputPath,String outputPath,Object model) throws IOException,TemplateException {
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_32);
 
+        //指定模板文件所在路径
         File templateDir = new File(inputPath).getParentFile();
         configuration.setDirectoryForTemplateLoading(templateDir);
 
@@ -42,8 +43,9 @@ public class DynamicFileGenerator {
         }
 
         //生成
-        try (Writer out = new OutputStreamWriter(new FileOutputStream(outputPath), "UTF-8")) {
-            template.process(model, out);
-        }
+        Writer out = new FileWriter(outputPath);
+        template.process(model, out);
+
+        out.close();
     }
 }

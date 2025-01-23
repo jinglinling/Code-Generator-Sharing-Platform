@@ -19,8 +19,8 @@ ${indent}private ${modelInfo.type} ${modelInfo.fieldName}<#if modelInfo.defaultV
 <#-- 生成命令调用 -->
 <#macro generateCommand indent modelInfo>
 ${indent}System.out.println("输入${modelInfo.groupName}配置：");
-${indent}CommandLine ${modelInfo.groupKey}commandLine = new CommandLine(${modelInfo.type}Command.class);
-${indent}${modelInfo.groupKey}commandLine.execute(${modelInfo.allArgsStr});
+${indent}CommandLine ${modelInfo.groupKey}CommandLine = new CommandLine(${modelInfo.type}Command.class);
+${indent}${modelInfo.groupKey}CommandLine.execute(${modelInfo.allArgsStr});
 </#macro>
 
 @Command(name = "generate", description = "生成代码", mixinStandardHelpOptions = true)
@@ -36,7 +36,7 @@ public class GenerateCommand implements Callable<Integer> {
     static DataModel.${modelInfo.type} ${modelInfo.groupKey} = new DataModel.${modelInfo.type}();
 
     <#-- 根据分组生成命令类 -->
-    @Command(name = "${modelInfo.groupName}", description = "${modelInfo.description}")
+    @Command(name = "${modelInfo.groupKey}")
     @Data
     public static class ${modelInfo.type}Command implements Runnable {
     <#list modelInfo.models as subModelInfo>
@@ -46,7 +46,7 @@ public class GenerateCommand implements Callable<Integer> {
         @Override
         public void run() {
             <#list modelInfo.models as subModelInfo>
-            ${modelInfo.groupKey}.${subModelInfo.fieldName} = ${subModelInfo.fieldName};
+                ${modelInfo.groupKey}.${subModelInfo.fieldName} = ${subModelInfo.fieldName};
             </#list>
         }
     }
@@ -61,7 +61,7 @@ public class GenerateCommand implements Callable<Integer> {
         <#if modelInfo.groupKey??>
         <#if modelInfo.condition??>
         if (${modelInfo.condition}) {
-            <@generateCommand indent="            " modelInfo=modelInfo />
+        <@generateCommand indent="            " modelInfo=modelInfo />
         }
         <#else>
         <@generateCommand indent="      " modelInfo=modelInfo />

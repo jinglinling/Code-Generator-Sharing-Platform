@@ -11,19 +11,19 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * 动态文件生成
- */
+* 动态文件生成
+*/
 public class DynamicGenerator {
 
     /**
-     * 生成文件
-     *
-     * @param inputPath 模板文件输入路径
-     * @param outputPath 输出路径
-     * @param model 数据模型
-     * @throws IOException
-     * @throws TemplateException
-     */
+    * 生成文件
+    *
+    * @param inputPath 模板文件输入路径
+    * @param outputPath 输出路径
+    * @param model 数据模型
+    * @throws IOException
+    * @throws TemplateException
+    */
     public static void doGenerate(String inputPath, String outputPath, Object model) throws IOException, TemplateException {
         // new 出 Configuration 对象，参数为 FreeMarker 版本号
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_32);

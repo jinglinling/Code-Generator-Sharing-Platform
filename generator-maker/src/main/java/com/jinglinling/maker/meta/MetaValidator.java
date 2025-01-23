@@ -33,7 +33,7 @@ public class MetaValidator {
             return;
         }
         List<Meta.ModelConfig.ModelInfo> modelInfoList = modelConfig.getModels();
-        if (CollectionUtil.isEmpty(modelInfoList)) {
+        if (!CollectionUtil.isNotEmpty(modelInfoList)) {
             return;
         }
         for (Meta.ModelConfig.ModelInfo modelInfo : modelInfoList) {
@@ -42,20 +42,19 @@ public class MetaValidator {
             if (StrUtil.isNotEmpty(groupKey)) {
                 // 生成中间参数
                 List<Meta.ModelConfig.ModelInfo> subModelInfoList = modelInfo.getModels();
-                String allArgsStr = subModelInfoList.stream()
+                String allArgsStr = modelInfo.getModels().stream()
                         .map(subModelInfo -> String.format("\"--%s\"", subModelInfo.getFieldName()))
                         .collect(Collectors.joining(", "));
                 modelInfo.setAllArgsStr(allArgsStr);
                 continue;
             }
 
-            //输出路径默认值
-            String filedName = modelInfo.getFieldName();
-            if (StrUtil.isBlank(filedName)) {
-                throw new RuntimeException("未填写filedName");
+            // 输出路径默认值
+            String fieldName = modelInfo.getFieldName();
+            if (StrUtil.isBlank(fieldName)) {
+                throw new MetaException("未填写 fieldName");
             }
 
-            //模型配置
             String modelInfoType = modelInfo.getType();
             if (StrUtil.isEmpty(modelInfoType)) {
                 modelInfo.setType(ModelTypeEnum.STRING.getValue());
@@ -72,7 +71,7 @@ public class MetaValidator {
         //sourceRootPath(必填)
         String sourceRootPath = fileConfig.getSourceRootPath();
         if (StrUtil.isBlank(sourceRootPath)) {
-            throw new RuntimeException("未填写sourceRootPath");
+            throw new MetaException("未填写 sourceRootPath");
         }
 
         //inputRootPath (.source + sourceRootPath的最后一个层级路径)
@@ -98,41 +97,39 @@ public class MetaValidator {
 
         //fileInfo默认值
         List<Meta.FileConfig.FileInfo> fileInfoList = fileConfig.getFiles();
-        if (CollectionUtil.isEmpty(fileInfoList)) {
+        if (!CollectionUtil.isNotEmpty(fileInfoList)) {
             return;
         }
         for (Meta.FileConfig.FileInfo fileInfo : fileInfoList) {
             String type = fileInfo.getType();
-            //类型为group，不校验
+            // 类型为 group，不校验
             if (FileTypeEnum.GROUP.getValue().equals(type)) {
                 continue;
             }
-            //inputPath (必填)
+            // inputPath: 必填
             String inputPath = fileInfo.getInputPath();
             if (StrUtil.isBlank(inputPath)) {
-                throw new RuntimeException("未填写inputPath");
+                throw new MetaException("未填写 inputPath");
             }
 
-            //outputPath (默认等于inputPath)
+            // outputPath: 默认等于 inputPath
             String outputPath = fileInfo.getOutputPath();
-            if (StrUtil.isBlank(outputPath)) {
+            if (StrUtil.isEmpty(outputPath)) {
                 fileInfo.setOutputPath(inputPath);
             }
-
-            //type (默认inputPath，有文件后缀(如：.java)为file，否则为dir)
+            // type：默认 inputPath 有文件后缀（如 .java）为 file，否则为 dir
             if (StrUtil.isBlank(type)) {
-                //无文件后缀
+                // 无文件后缀
                 if (StrUtil.isBlank(FileUtil.getSuffix(inputPath))) {
                     fileInfo.setType(FileTypeEnum.DIR.getValue());
                 } else {
                     fileInfo.setType(FileTypeEnum.FILE.getValue());
                 }
             }
-
-            //generateType (如果文件结尾不为.ftl，generateType默认为static，否则为dynamic)
+            // generateType：如果文件结尾不为 Ftl，generateType 默认为 static，否则为 dynamic
             String generateType = fileInfo.getGenerateType();
             if (StrUtil.isBlank(generateType)) {
-                //动态模板
+                // 为动态模板
                 if (inputPath.endsWith(".ftl")) {
                     fileInfo.setGenerateType(FileGenerateTypeEnum.DYNAMIC.getValue());
                 } else {
@@ -144,12 +141,12 @@ public class MetaValidator {
 
     private static void validAndFillMetaRoot(Meta meta) {
         //基础信息校验和默认值
-        String name = StrUtil.blankToDefault(meta.getName(),"my-generator");
-        String description = StrUtil.blankToDefault(meta.getDescription(),"我的模板代码生成器");
-        String author = StrUtil.blankToDefault(meta.getAuthor(),"jinglinling");
-        String basePackage = StrUtil.blankToDefault(meta.getBasePackage(),"com.jinglinling");
-        String version = StrUtil.blankToDefault(meta.getVersion(),"1.0");
-        String createTime = StrUtil.blankToDefault(meta.getCreateTime(),DateUtil.now());
+        String name = StrUtil.blankToDefault(meta.getName(), "my-generator");
+        String description = StrUtil.emptyToDefault(meta.getDescription(), "我的模板代码生成器");
+        String author = StrUtil.emptyToDefault(meta.getAuthor(), "jinglinling");
+        String basePackage = StrUtil.blankToDefault(meta.getBasePackage(), "com.jinglinling");
+        String version = StrUtil.emptyToDefault(meta.getVersion(), "1.0");
+        String createTime = StrUtil.emptyToDefault(meta.getCreateTime(), DateUtil.now());
 
         meta.setName(name);
         meta.setDescription(description);

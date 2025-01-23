@@ -1,6 +1,7 @@
 package com.jinglinling.maker.generator;
 
 import java.io.*;
+import java.util.Map;
 
 /**
  * @Auther 谢骏晖
@@ -15,12 +16,14 @@ public class JarGenerator {
         String otherMavenCommand = "mvn clean package -DskipTests=true";
         String mavenCommand = winMavenCommand;
 
+        // 这里一定要拆分！
         ProcessBuilder processBuilder = new ProcessBuilder(mavenCommand.split(" "));
         processBuilder.directory(new File(projectDir));
-
+        Map<String, String> environment = processBuilder.environment();
+        System.out.println(environment);
         Process process = processBuilder.start();
 
-        //读取命令输出
+        // 读取命令的输出
         InputStream inputStream = process.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
@@ -28,7 +31,7 @@ public class JarGenerator {
             System.out.println(line);
         }
 
-        //等待命令执行完成
+        // 等待命令执行完成
         int exitCode = process.waitFor();
         System.out.println("命令执行结束，退出码：" + exitCode);
     }

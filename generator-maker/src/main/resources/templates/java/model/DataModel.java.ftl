@@ -17,6 +17,7 @@ ${indent}public ${modelInfo.type} ${modelInfo.fieldName}<#if modelInfo.defaultVa
 @Data
 public class DataModel {
 <#list modelConfig.models as modelInfo>
+
     <#-- 有分组 -->
     <#if modelInfo.groupKey??>
     /**

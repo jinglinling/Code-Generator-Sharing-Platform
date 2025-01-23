@@ -21,12 +21,12 @@ public class ScriptGenerator {
         //linux
         StringBuilder sb = new StringBuilder();
         sb.append("#!/bin/bash").append("\n");
-        sb.append(String.format("java -jar %s \"$@\"",jarPath)).append("\n");
-        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8),outputPath);
+        sb.append(String.format("java -jar %s \"$@\"", jarPath)).append("\n");
+        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8), outputPath);
         //添加可执行权限
         try {
             Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
-            Files.setPosixFilePermissions(Paths.get(outputPath),permissions);
+            Files.setPosixFilePermissions(Paths.get(outputPath), permissions);
         } catch (Exception e) {
 
         }
@@ -34,8 +34,8 @@ public class ScriptGenerator {
         //window
         sb = new StringBuilder();
         sb.append("@echo off").append("\n");
-        sb.append(String.format("java -jar %s %%*",jarPath)).append("\n");
-        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8),outputPath + ".bat");
+        sb.append(String.format("java -jar %s %%*", jarPath)).append("\n");
+        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8), outputPath + ".bat");
     }
 
     public static void main(String[] args) throws IOException {
