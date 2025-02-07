@@ -2,8 +2,8 @@ package com.jinglinling.web.model.vo;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.jinglinling.web.meta.Meta.FileConfig;
-import com.jinglinling.web.meta.Meta.ModelConfig;
+import com.jinglinling.maker.meta.Meta.FileConfig;
+import com.jinglinling.maker.meta.Meta.ModelConfig;
 import com.jinglinling.web.model.entity.Generator;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;

@@ -99,8 +99,8 @@ export default (props: Props) => {
                                         rowGap: 16,
                                         }}
                                         >
-                                            {subFields.map((subFields) =>
-                                                singleFieldFormView(subFields, subOpt.remove),
+                                            {subFields.map((subField) =>
+                                                singleFieldFormView(subField, subOpt.remove),
                                             )}
                                             <Button type='dashed' onClick={() => subOpt.add()} block>
                                                 添加组内字段

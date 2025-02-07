@@ -1,10 +1,16 @@
 package com.jinglinling.web.controller;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jinglinling.maker.generator.main.GenerateTemplate;
+import com.jinglinling.maker.generator.main.ZipGenerator;
+import com.jinglinling.maker.meta.Meta;
+import com.jinglinling.maker.meta.MetaValidator;
 import com.jinglinling.web.annotation.AuthCheck;
 import com.jinglinling.web.common.BaseResponse;
 import com.jinglinling.web.common.DeleteRequest;
@@ -14,8 +20,8 @@ import com.jinglinling.web.constant.UserConstant;
 import com.jinglinling.web.exception.BusinessException;
 import com.jinglinling.web.exception.ThrowUtils;
 import com.jinglinling.web.manager.CosManager;
-import com.jinglinling.web.meta.Meta.FileConfig;
-import com.jinglinling.web.meta.Meta.ModelConfig;
+import com.jinglinling.maker.meta.Meta.FileConfig;
+import com.jinglinling.maker.meta.Meta.ModelConfig;
 import com.jinglinling.web.model.dto.generator.*;
 import com.jinglinling.web.model.entity.Generator;
 import com.jinglinling.web.model.entity.User;
@@ -25,6 +31,7 @@ import com.jinglinling.web.service.UserService;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.COSObjectInputStream;
 import com.qcloud.cos.utils.IOUtils;
+import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
@@ -427,6 +435,82 @@ public class GeneratorController {
         //清理文件
         CompletableFuture.runAsync(() -> {
             FileUtil.del(tempDirPath);
+        });
+    }
+
+    /**
+     * 制作代码生成器
+     * @param generatorMakeRequest
+     * @param request
+     * @param response
+     */
+    @PostMapping("/make")
+    public void makeGenerator(@RequestBody GeneratorMakeRequest generatorMakeRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //输入参数
+        String zipFilePath = generatorMakeRequest.getZipFilePath();
+        Meta meta = generatorMakeRequest.getMeta();
+
+        //需要登录
+        User loginUser = userService.getLoginUser(request);
+        log.info("userId = {} 在线制作了生成器", loginUser.getId());
+
+        //创建独立工作空间，下载压缩包到本地
+        if (StrUtil.isBlank(zipFilePath)) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "压缩包不存在");
+        }
+
+        //工作空间
+        String projectPath = System.getProperty("user.dir");
+        //随机id
+        String id = IdUtil.getSnowflakeNextId() + RandomUtil.randomString(6);
+        String temDirPath = String.format("%s/.temp/make/%s", projectPath, id);
+        String localZipFilePath = temDirPath + "project.zip";
+
+        //新建文件
+        if (!FileUtil.exist(localZipFilePath)) {
+            FileUtil.touch(localZipFilePath);
+        }
+
+        try {
+            cosManager.download(zipFilePath, localZipFilePath);
+        } catch (InterruptedException e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "压缩包下载失败");
+        }
+
+        //解压文件
+        File unzipDistDir = ZipUtil.unzip(localZipFilePath);
+
+        //构建制作工具所需参数，包括Meta对象和生成器文件输出路径
+        String sourceRootPath = unzipDistDir.getAbsolutePath();
+        meta.getFileConfig().setSourceRootPath(sourceRootPath);
+        //元信息校验
+        MetaValidator.doValidAndFill(meta);
+        String outputPath = String.format("%s/generated/%s", temDirPath, meta.getName());
+
+        //调用maker方法制作生成器
+        GenerateTemplate generateTemplate = new ZipGenerator();
+        try {
+            generateTemplate.doGenerate(meta, outputPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "制作失败");
+        }
+
+        //下载压缩的产物包文件
+        String suffix = "-dist.zip";
+        String zipFileName = meta.getName() + suffix;
+        String distZipFilePath = outputPath + suffix;
+
+        //下载文件
+        //设置响应头
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=" + zipFileName);
+        //写入响应
+        Files.copy(Paths.get(distZipFilePath), response.getOutputStream());
+
+        //清理文件
+        CompletableFuture.runAsync(() -> {
+            FileUtil.del(temDirPath);
         });
     }
 }
