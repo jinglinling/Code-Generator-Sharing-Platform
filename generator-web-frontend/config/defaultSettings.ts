@@ -14,7 +14,7 @@ const Settings: ProLayoutProps & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '代码生成器共享平台',
+  title: '代码生成坊',
   pwa: true,
   iconfontUrl: '',
   token: {

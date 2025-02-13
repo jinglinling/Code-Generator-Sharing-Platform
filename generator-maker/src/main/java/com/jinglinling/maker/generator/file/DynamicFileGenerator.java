@@ -7,6 +7,9 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * @Auther 谢骏晖
@@ -41,7 +44,7 @@ public class DynamicFileGenerator {
         configuration.setDefaultEncoding("utf-8");
 
         //创建模板对象，加载指定模板
-        Template template = configuration.getTemplate(templateName);
+        Template template = configuration.getTemplate(templateName,"utf-8");
 
         //文件不存在则创建文件和父目录
         if (!FileUtil.exist(outputPath)) {

@@ -1,22 +1,19 @@
 # 线上配置文件
 server:
-  port: 8101
+  port: 8120
 spring:
   # 数据库配置
-  # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/my_db
     username: root
     password: 123456
   # Redis 配置
-  # todo 需替换配置
   redis:
     database: 1
     host: localhost
     port: 6379
     timeout: 5000
-    password: 123456
 mybatis-plus:
   configuration:
     # 生产环境关闭日志
@@ -27,3 +24,35 @@ knife4j:
     enable: true
     username: root
     password: 123456
+# xxl-job 配置
+xxl:
+  job:
+    admin:
+      timeout: 3
+      # xxl-job admin address list, such as "http://address" or "http://address01,http://address02"
+      addresses: http://127.0.0.1:8080/xxl-job-admin
+    # xxl-job, access token
+    accessToken: default_token
+    executor:
+      # xxl-job executor appname
+      appname: generator-web-backend
+      # xxl-job executor registry-address: default use address to registry , otherwise use ip:port if address is null
+      address:
+      # xxl-job executor server-info
+      ip:
+      port: 9999
+      # xxl-job executor log-path
+      logpath: logs/jobhandler
+      # xxl-job executor log-retention-days
+      logretentiondays: 30
+# 对象存储
+cos:
+  client:
+    accessKey: xxx
+    secretKey: xxx
+    region: ap-guangzhou
+    bucket: xxx
+logging:
+  level:
+    root: DEBUG
+    org.springframework: DEBUG

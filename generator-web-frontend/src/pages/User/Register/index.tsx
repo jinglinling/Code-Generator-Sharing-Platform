@@ -75,7 +75,7 @@ const UserRegisterPage: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" style={{ height: '100%' }} src="/logo.png" />}
-          title="代码生成器共享平台 - 注册"
+          title="代码生成坊 - 注册"
           subTitle={'高效生成、爽快编码'}
           initialValues={{
             autoLogin: true,
